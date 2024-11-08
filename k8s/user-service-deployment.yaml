@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-service
+  labels:
+    app: user-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user-service
+  template:
+    metadata:
+      labels:
+        app: user-service
+    spec:
+      containers:
+      - name: user-service
+        image: cfpalaciolozano/user_service:1.0
+        ports:
+          - containerPort: 8000
+        env:
+          - name: MYSQL_USER
+            valueFrom:
+              secretKeyRef:
+                name: secret
+                key: MYSQL_USER
+          - name: MYSQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: secret
+                key: MYSQL_PASSWORD
+          - name: MYSQL_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: config
+                key: MYSQL_HOST
+          - name: MYSQL_DATABASE
+            valueFrom:
+              configMapKeyRef:
+                name: config
+                key: MYSQL_DATABASE
+          - name: KAFKA_BROKER_URL
+            valueFrom:
+              configMapKeyRef:
+                name: config
+                key: KAFKA_BROKER_URL
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "250m"
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
+        imagePullPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-service
+  labels:
+    app: user-service
+spec:
+  selector:
+    app: user-service
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
+  type: ClusterIP

@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+data:
+  MYSQL_HOST: "mysql"
+  MYSQL_DATABASE: "your_database"
+  KAFKA_BROKER_URL: "kafka:9092"
+  KAFKA_TOPIC: "user_events"

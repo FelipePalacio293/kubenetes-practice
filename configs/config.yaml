@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config
+data:
+  KAFKA_BROKER_URL: "kafka-service:9092"
+  KAFKA_TOPIC: "user_events"
+  MYSQL_DATABASE: "user_db"
+  MYSQL_HOST: "mysql"
+  PROMETHEUS_PORT: "9090"
+  GRAFANA_USER: "admin"
